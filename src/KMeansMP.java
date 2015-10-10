@@ -64,7 +64,7 @@ public final class KMeansMP {
       Vector point = args._2();
 
       int cluster = model.predict(point);
-      return new Tuple2<Integer, String>(clster, title);
+      return new Tuple2<Integer, String>(cluster, title);
     }
   }
 
@@ -91,7 +91,7 @@ public final class KMeansMP {
     JavaRDD<Vector> points = lines.map(new ParsePoint());
     JavaRDD<String> titles = lines.map(new ParseTitle());
 
-    KMeansModel model = KMeans.train(points.rdd(), k, iterations, runs, KMeans.RANDOM(), 0);
+    model = KMeans.train(points.rdd(), k, iterations, runs, KMeans.RANDOM(), 0);
 
     results = titles
       .zip(points)
