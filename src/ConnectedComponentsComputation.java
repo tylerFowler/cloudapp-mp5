@@ -64,10 +64,10 @@ public class ConnectedComponentsComputation extends
       }
 
       if (changed) {
-        vertext.setValue(new IntWritable(currentComponent));
+        vertex.setValue(new IntWritable(currentComponent));
         sendMessageToAllEdges(vertex, vertex.getValue());
       }
 
-      vertext.voteToHalt();
+      vertex.voteToHalt();
   }
 }
