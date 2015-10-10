@@ -25,10 +25,12 @@ public class ConnectedComponentsComputation extends
   public void compute(
       Vertex<IntWritable, IntWritable, NullWritable> vertex,
       Iterable<IntWritable> messages) throws IOException {
+      System.out.println("STARTED COMPUTE");
 
       int currentComponent = vertex.getValue().get();
 
       if (getSuperstep() == 0) {
+        System.out.println("GOT TO SUPERSTEP 0");
         for (Edge<IntWritable, NullWritable> edge : vertex.getEdges()) {
           int neighbor = edge.getTargetVertexId().get();
           if (neighbor < currentComponent) {
