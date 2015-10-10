@@ -14,8 +14,8 @@ public class ShortestPathsComputation extends BasicComputation<
     IntWritable, IntWritable, NullWritable, IntWritable> {
   /** The shortest paths id */
   public static final LongConfOption SOURCE_ID =
-      new LongConfOption("SimpleShortestPathsVertex.sourceId", 1,
-          "The shortest paths id");
+    new LongConfOption("SimpleShortestPathsVertex.sourceId", 1,
+        "The shortest paths id");
 
   /**
    * Is this vertex the source id?
@@ -28,8 +28,25 @@ public class ShortestPathsComputation extends BasicComputation<
   }
 
   @Override
-  public void compute(
-      Vertex<IntWritable, IntWritable, NullWritable> vertex,
-      Iterable<IntWritable> messages) throws IOException {
+  public void compute(Vertex<IntWritable, IntWritable, NullWritable> vertex, Iterable<IntWritable> messages) throws IOException {
+    if (getSuperstep() == 0) {
+      vertext.setValue(new IntWritable(Integer.MAX_VALUE));
+    }
+
+    int minDist = isSource(vertext) ? 0 : Integer.MAX_VALUE;
+    for (IntWritable msg : messages) {
+      minDist = Math.min(minDist, msg.get());
+    }
+
+    if (minDist < vertex.getValue().get()) {
+      vertex.setValue(new IntWritable(minDist));
+
+      for (Edge<IntWritable, NullWritable> edge : vertex.getEdges()) {
+        int dist = minDist + edge.getValue().get();
+        sendMEssage(edge.getTargetVertexId(), new IntWritable(dist));
+      }
+    }
+
+    vertex.voteToHalt();
   }
 }
